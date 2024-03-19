@@ -12,94 +12,14 @@ consumers:
             username: yoduser42
             password: a0U|j&N-1eiy+va^0BD4
 routes:
-  -   plugins:
-          basic-auth:
-              hide_credentials: false
-              password: a0U|j&N-1eiy+va^0BD4
-              username: yoduser42
-          proxy-rewrite:
-              headers:
-                  Authorization: Basic QVBJVVNFUllPRDpzckpEcXdNWTVxTVZIWGc0bjBoakxKeGVETmsrZkpUaXkxWlN4TzlGbUlrPQ==
-      upstream:
-          nodes:
-              lv516-uat.idev.digital:7548: 1
-          scheme: https
-          type: roundrobin
-      uri: /*  
-  -   plugins:
-          basic-auth:
-              password: a0U|j&N-1eiy+va^0BD4
-              username: yoduser42
-      upstream:
-          nodes:
-              119.29.219.127:80: 1
-          type: roundrobin
-      uri: /test
-  -   plugins:
-          basic-auth:
-              password: a0U|j&N-1eiy+va^0BD4
-              username: yoduser42
-      upstream:
-          nodes:
-              10.203.13.11:30523: 1
-          type: roundrobin
-      uri: /query/sql
-  -   plugins:
-          basic-auth:
-              password: a0U|j&N-1eiy+va^0BD4
-              username: yoduser42
-          kafka-body-sender:
-              kafka_topic: 'webflow'
-              brokers: 
-                - 
-                  host: '10.0.3.13'
-                  port: 32100
-              #sasl_config:
-              #    mechanism: 'SCRAM-SHA-256'
-              #    user: 'ZGV2b3RlZC1kYXNzaWUtMTA0ODEkQudNA4XMr5MSw-VLNx60Xm7Ml57G38RFwxw'
-              #    password: 'MDM5YzkwYzItNDhkNy00M2ZmLWEwODctOTMyYTJmZmJhNzc1'
-              #brokers: 
-              #  - 
-              #    host: 'devoted-dassie-10481-eu2-kafka.upstash.io'
-              ##    port: 9092
-      upstream:
-          nodes:
-              10.203.13.11:30523: 1
-          type: roundrobin
-      uri: /kafka
-  -   plugins:
-          response-rewrite:
-              status_code: 200
-              body: '{"message":"ok"}'
-              headers:
-                X-Header-1: "value1"
-                X-Header-2: "value2"
-          kafka-callback-code-sender:
-              kafka_topic: 'webflow'
-              brokers: 
-                - 
-                  host: '10.0.3.13'
-                  port: 32100
-              #sasl_config:
-              #    mechanism: 'SCRAM-SHA-256'
-              #    user: 'ZGV2b3RlZC1kYXNzaWUtMTA0ODEkQudNA4XMr5MSw-VLNx60Xm7Ml57G38RFwxw'
-              #    password: 'MDM5YzkwYzItNDhkNy00M2ZmLWEwODctOTMyYTJmZmJhNzc1'
-              #brokers: 
-              #  - 
-              #    host: 'devoted-dassie-10481-eu2-kafka.upstash.io'
-              ##    port: 9092
-      #upstream:
-      #    nodes:
-      #        23.227.38.74:80: 1
-      #    type: roundrobin
-      uri: /callback
   -   upstream:
           nodes:
               "rc.quinyx.com:443": 1
           scheme: https
+          pass_host: "node"
           type: roundrobin
-      host: "rc-quinyx.yodo.internal"
-      uri: /*         
+      host: "rc-quinyx.youwinn.digital"
+      uri: "/*"
 ssls:
   - cert: |
       -----BEGIN CERTIFICATE-----
@@ -224,59 +144,5 @@ ssls:
       -----END PRIVATE KEY-----
 
     snis:
-      - dev-miklatorg.youwinn.digital
-ssls:
-  - cert: |
-      -----BEGIN CERTIFICATE-----
-      MIIDFTCCAf2gAwIBAgIUZrqAQW3Hu2Q0yF0eBVfVY3EVJhUwDQYJKoZIhvcNAQEL
-      BQAwGjEYMBYGA1UEAwwPKi55b2RvLmludGVybmFsMB4XDTI0MDMxOTAzMzEyMFoX
-      DTI3MTIxNDAzMzEyMFowGjEYMBYGA1UEAwwPKi55b2RvLmludGVybmFsMIIBIjAN
-      BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAql5vs3a4/+Nb7sgWCyoeynpwbPJg
-      2ms86BNSM4YP87rxbiBu2k6YjDmwM3Lb7T9O7rRcmhyaT27V30TzOQyv8ul2GpcI
-      MiesRERIOgsEdXyVTFvW7sMFLvLFq8cclbqVdcEAYvqKtOzXpyLQzAaSo293FjEz
-      tScej3Ra6epiH64GjTt4HjyB4ISgyhgj6qsk0CzjGE945Vh/9VAb5b1pVLyorfzq
-      UIoh+Ji4ZmoLicKQ/10/fGO94UU8cxJdPmysbcrEKJa24gABgzXX1njcsVNN1A4q
-      oDbwN2L6HfhRkXEhqCSnIU7oP+D5XXHy+SDpdQuZDuyVeSq5zZk3dPL3bQIDAQAB
-      o1MwUTAdBgNVHQ4EFgQU+5w+xqPCTUlXIq170TQVTvAUkkAwHwYDVR0jBBgwFoAU
-      +5w+xqPCTUlXIq170TQVTvAUkkAwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0B
-      AQsFAAOCAQEAatim/wqEHVTf6ZKTFqw7EEdhs5tpOTDZ3DedAD0UEPB12grO80Iu
-      OCyh0iWP9HljoqeHFcM+ngWY0xIP9TvtdwKDGanPkZSgnH9Fqfkad3KYmpShv0rH
-      Q9jnjnQyoKXN+Cr7J0HSJhyZ0cvLnVr/5qyYFSwwxcZR2XMEt9YeGPRK9tU1WrD/
-      MQw3l94VreEwRwDc7W5Uf5mSA/l2hzHgcgIGW9klsv47dGNSbsdShLTtrSZ8sso3
-      6HLsH3tN/XKbT1GgZlc7EvJu8owAGHzL4keMaj8xjKkfzrgLTdZ27yzsj+lDB1Nb
-      Y8Bln6uxkkIOLCMUQJ/3uVaVbwYKPqqKPg==
-      -----END CERTIFICATE-----
-
-    key: |
-      -----BEGIN PRIVATE KEY-----
-      MIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQCqXm+zdrj/41vu
-      yBYLKh7KenBs8mDaazzoE1Izhg/zuvFuIG7aTpiMObAzctvtP07utFyaHJpPbtXf
-      RPM5DK/y6XYalwgyJ6xEREg6CwR1fJVMW9buwwUu8sWrxxyVupV1wQBi+oq07Nen
-      ItDMBpKjb3cWMTO1Jx6PdFrp6mIfrgaNO3gePIHghKDKGCPqqyTQLOMYT3jlWH/1
-      UBvlvWlUvKit/OpQiiH4mLhmaguJwpD/XT98Y73hRTxzEl0+bKxtysQolrbiAAGD
-      NdfWeNyxU03UDiqgNvA3Yvod+FGRcSGoJKchTug/4PldcfL5IOl1C5kO7JV5KrnN
-      mTd08vdtAgMBAAECgf85u0aeydxm2eSNRcAyiFNmyZbPVFL9sNkyy1lPnF5LeU3W
-      w6bM01VeLy5GQOXFv24/9V5r2sVvpV9UCUliS6pT5kjfOc7NMCRv/bN797/LECyH
-      c5eh0PQwtJPHYfGNy2xaOsymvb/DD38EZAfdG10VhPAV1RZwjJEOi59DJOmbUg8/
-      /AMl4hXtnTX2uW/p81FFs1GJj/hEaCYS3vKzJghIjeSZyz8V7GQ1eE6rHejgtq3u
-      yJX58TiepoPNQ4ecaxcd1VtmxXSHGzWZQ2jIZHjMjj/wCK3YDFjWm/uc4n8jEPsi
-      W3fFwyXgoU0e9ky7xR48qXxLQU7uZCc4BheMbpECgYEA5Su2NGbYF0i8ZM1sEJr3
-      BZZoFSJykeqcu4bUmVtO1iTnqE7/q3r3B9hhDhc5yN+hlAaXyXYLU0SChNCI8qvz
-      NI8OQmXf7mmIEwNmeIav6nv5RJu6Q5xKWvYGecUssXfWdQNrP8Zbc2KZfmkYmwW2
-      FNKu44d0a+SXyRKgCDe4S90CgYEAvlBsJRPreSq+O8HX5SmsD9A3oEF3EkWcSsKH
-      P+84CLCu2walKohY4yRQs33kCpx8TPR0QOCjFZZ/7Cf8Q9c9HcLtRsj5mpXMEsgw
-      u2UG51CROTGWsYUZBbp7RuJocY64kvfUZjwGIo+7hIrPnjKogIKMvoMSDP71jM8b
-      retEqNECgYB2I8+dOftiHXwJVyDDeq+ncL8dThHUCSddQQeuOzTsDkBiMr94rj5V
-      DAYUloKSfD62qaNsFu+FsIa8YyiGOYB58tl9/ziuljaw3orfzUc40UpSRRmDqzll
-      pPj3o18D6exjjCyoxt/0HrtUQGeP2yTfnTDNWNH6oPBilrhrJBZc/QKBgDSoIdP8
-      d/mVhv8XujmQ1yek788qbdyjYAQbYLqi4Lke0bKOWyKyiQ2H3cBcA72f4JCWTpgo
-      z1bIxmo8AgNvSVyzs10TfGR2L/m+ZCVlZYyY8SWG/+/sKKk6GKPbPxS0bYNUiPMk
-      hnoHlNWuZpWZ5J9x/6kysMrhvGUSZNExOFURAoGAM681Hqnf23Zrv1PKuXZGNtMd
-      8XaB1ACBxZ/kQ0ruJHu4ysFO09NTBOHjDkF1RkEBhrKbpMF8FzKPdOr6HCxKd74b
-      K5HyrYF09tDh7AxZkRn8Bg+DTm7ITTEHc1Eat72rbNzv85GD1++Qo+h2JdpE7vbB
-      u6k4Tpd+FHDyqTrMuUk=
-      -----END PRIVATE KEY-----
-
-    snis:
-      - *.yodo.internal
+      - *.youwinn.digital
 #END

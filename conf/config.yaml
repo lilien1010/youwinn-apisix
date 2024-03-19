@@ -25,8 +25,6 @@ apisix:
     ssl_certificate_key: "/etc/ssl/private/youwinndigital.key"
   router:
     http: radixtree_host_uri         # radixtree_uri: match route by uri(base on radixtree)
-  http:
-    proxy_ssl_server_name: true
 
 deployment:
   role: data_plane
