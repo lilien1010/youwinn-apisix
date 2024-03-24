@@ -20,6 +20,24 @@ routes:
           type: roundrobin
       host: "rc-quinyx.youwinn.digital"
       uri: "/*"
+  -   plugins:
+          basic-auth:
+              password: a0U|j&N-1eiy+va^0BD4
+              username: yoduser42
+          kafka-body-sender:
+              kafka_topic: 'webflow'
+              brokers: 
+                - 
+                  host: '10.0.3.13'
+                  port: 32100
+              #sasl_config:
+              #    mechanism: 'SCRAM-SHA-256'
+              #    user: 'ZGV2b3RlZC1kYXNzaWUtMTA0ODEkQudNA4XMr5MSw-VLNx60Xm7Ml57G38RFwxw'
+              #    password: 'MDM5YzkwYzItNDhkNy00M2ZmLWEwODctOTMyYTJmZmJhNzc1'
+              #brokers: 
+              #  - 
+              #    host: 'devoted-dassie-10481-eu2-kafka.upstash.io'
+              ##    port: 9092      
 ssls:
   - cert: |
       -----BEGIN CERTIFICATE-----

@@ -105,6 +105,7 @@ local schema = {
                 type = "array"
             }
         },
+        valid_req_json = {type = "boolean", default = false},
         include_resp_body = {type = "boolean", default = false},
         include_resp_body_expr = {
             type = "array",
@@ -173,7 +174,7 @@ local function local_json_decode(jsonStr)
 end
 
 
-local function get_post_json_data()
+local function get_post_json_data(valid_json)
   local out = ''
     if "POST" ~= ngx.var.request_method   then
         out =   '[POST need]'
@@ -198,18 +199,20 @@ local function get_post_json_data()
             return nil, out
         end
     end
+    if valid_json then
+        local entry, err = local_json_decode(post_data)
+        if not entry then
+            ngx.log(ngx.CRIT,'local_json_decode failed', err, "[", post_data, "]")
+            return nil, 'json fail'
+        end
 
-    local entry, err = local_json_decode(post_data)
-    if not entry then
-        ngx.log(ngx.CRIT,'local_json_decode failed', err, "[", post_data, "]")
-        return nil, 'json fail'
+        return entry, out
     end
-
-    return entry, out
+    return post_data, out
 end
 
 function _M.access(conf, ctx)
-    local post_data, err = get_post_json_data()
+    local post_data, err = get_post_json_data(conf.valid_req_json)
     if not post_data then
         ngx.status = ngx.HTTP_FORBIDDEN
 
@@ -308,7 +311,11 @@ function _M.log(conf, ctx)
         return nil, "failed to identify the broker specified: " .. err
     end
 
-    local post_data = core.json.encode(entry)
+    local post_data = entry
+    if conf.valid_req_json then
+        post_data = core.json.encode(entry)
+    end
+
     local ok,err = send_kafka_data(conf, post_data, prod)
 
     if not ok then
