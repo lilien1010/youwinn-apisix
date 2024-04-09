@@ -315,7 +315,7 @@ function _M.log(conf, ctx)
     local ok,err = send_kafka_data(conf, post_data, prod)
 
     if not ok then
-        ngx.log(ngx.ERR, 'send data to kafka failed',post_data)
+        ngx.log(ngx.ERR, 'send data to kafka failed:',err)
     end
 end
 
