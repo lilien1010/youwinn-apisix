@@ -175,7 +175,7 @@ end
 
 
 local function get_post_json_data(valid_json)
-  local out = ''
+  local out = 'ok'
     if "POST" ~= ngx.var.request_method   then
         out =   '[POST need]'
         ngx.log(ngx.CRIT,out)
@@ -186,12 +186,12 @@ local function get_post_json_data(valid_json)
     local post_data = ngx.req.get_body_data()
     if post_data == nil then
         out =('[args is null]')
-        ngx.log(ngx.CRIT,out)
+        -- ngx.log(ngx.CRIT,out)
 
         local file_name = ngx.req.get_body_file()
         if file_name then
             out = '[get from file]'
-            ngx.log(ngx.CRIT,out, file_name)
+            -- ngx.log(ngx.CRIT,out, file_name)
             post_data = get_file(file_name)
         else
             out = "body file is empty"
@@ -202,7 +202,7 @@ local function get_post_json_data(valid_json)
     if valid_json then
         local entry, err = local_json_decode(post_data)
         if not entry then
-            ngx.log(ngx.CRIT,'local_json_decode failed', err, "[", post_data, "]")
+            -- ngx.log(ngx.CRIT,'local_json_decode failed', err, "[", post_data, "]")
             return nil, 'json fail'
         end
 
@@ -222,8 +222,8 @@ function _M.access(conf, ctx)
     end
  
     ctx.entry = post_data
-    ngx.log(ngx.CRIT, 'build entry for kafka', core.json.encode(conf.brokers) )
-    ngx.say(core.json.encode({message = 'ok'}))
+    -- ngx.log(ngx.CRIT, 'build entry for kafka', core.json.encode(conf.brokers) )
+    ngx.say(core.json.encode({status = 'ok','message' = err}))
     return ngx.exit(ngx.HTTP_OK)
 end
 
@@ -262,9 +262,6 @@ end
 
 local function send_kafka_data(conf, log_message, prod)
     local ok, err = prod:send(conf.kafka_topic, conf.key, log_message)
-    core.log.crit("partition_id: ", ok ,
-                  core.log.delay_exec(get_partition_id,
-                                      prod, conf.kafka_topic, log_message, ok))
 
     if not ok then
         return false, "failed to send data to Kafka topic: " .. err ..
@@ -305,8 +302,7 @@ function _M.log(conf, ctx)
 
     local prod, err = core.lrucache.plugin_ctx(lrucache, ctx, nil, create_producer,
                                                broker_list, broker_config, conf.cluster_name)
-    core.log.crit("kafka cluster name ", conf.cluster_name, ", broker_list[1] port ",
-                  prod.client.broker_list[1].port)
+    -- core.log.crit("kafka cluster name ", conf.cluster_name, ", broker_list[1] port ", prod.client.broker_list[1].port)
     if err then
         return nil, "failed to identify the broker specified: " .. err
     end

@@ -37,7 +37,9 @@ routes:
               #brokers: 
               #  - 
               #    host: 'devoted-dassie-10481-eu2-kafka.upstash.io'
-              ##    port: 9092      
+              ##    port: 9092 
+      host: "dev-miklatorg.youwinn.digital"
+      uri: "/kafka"    
 ssls:
   - cert: |
       -----BEGIN CERTIFICATE-----
